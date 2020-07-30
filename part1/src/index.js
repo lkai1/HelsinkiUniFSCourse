@@ -11,9 +11,7 @@ const App = () => {
   }
   const Part = (props) => {
     return (
-      <div>
         <p>{props.part} {props.exercises}</p>
-      </div>
     )
   }
   const Content = (props) => {
