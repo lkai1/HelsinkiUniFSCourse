@@ -35,8 +35,9 @@ const App = () => {
       if(personFilter === '') {
       return <p>{e.name} {e.number}</p>
       } else {
-        let same = false;
-        for(let i = 0; i < e.name.length; i++) {
+        return <p>hi</p>
+       /*  let same = false;
+        for(let i = 0; i < personFilter.length; i++) {
           if (e.name[i] === personFilter[i]) {
             same=true;
           } else {
@@ -48,8 +49,8 @@ const App = () => {
         } else {
           return <p></p>
         }
-      }
-    })
+      } */
+    }})
     )
   }
 
