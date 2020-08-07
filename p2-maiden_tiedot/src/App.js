@@ -12,6 +12,7 @@ const App = () => {
         setCountries(response.data)
       })
   }, [])
+  
   return (
     <div>
       <FilterCountries countries={countries} />
