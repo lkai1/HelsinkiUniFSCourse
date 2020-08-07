@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import PrintPersons from './components/PersonsForm'
+import AddPersonForm from './components/AddPersonForm.js'
+import FilterForm from './components/FilterForm'
+const App = () => {
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas', number: '040 - 1231244' }
+  ])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [personFilter, setPersonFilter] = useState('')
 
-function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Phonebook</h2>
+      <FilterForm filter={personFilter} setFilter={setPersonFilter}/>
+      <AddPersonForm name={newName} number={newNumber} persons={persons} setPersons={setPersons} setNumber={setNewNumber} setName={setNewName} />
+      <h2>Numbers</h2>
+      <PrintPersons persons={persons} personFilter={personFilter} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
