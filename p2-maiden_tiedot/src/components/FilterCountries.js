@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios';
+import FilterWeather from './FilterWeather'
 
-const FilterCountries = ({ countries }) => {
-    const countriesCopy = [...countries];
+const FilterCountries = () => {
+    const [countries, setCountries] = useState([])
+    const countriesCopy = [...countries]
+  useEffect(() => {
+    axios
+      .get('https://restcountries.eu/rest/v2/all')
+      .then(response => {
+        setCountries(response.data)
+      })
+  }, [])
     const [overTen, setOverTen] = useState(true)
     const [filteredCountries, setFilteredCountries] = useState([])
     const [filter, setFilter] = useState('')
@@ -12,6 +22,7 @@ const FilterCountries = ({ countries }) => {
             setOverTen(true)
         }
     }
+    
 
     const showOneCountry = (country) => {
         const languages = []
@@ -27,6 +38,7 @@ const FilterCountries = ({ countries }) => {
                 {languages}
             </ul>
             <img src={country.flag} width={'140px'} height={'100px'}></img>
+            <FilterWeather country={country.name}/>
         </div>)
         setOverTen(false)
     }
@@ -35,7 +47,7 @@ const FilterCountries = ({ countries }) => {
         const list = []
         if (countriesCopy.length !== 0) {
             for (let i = 0; i < countriesCopy.length; i++) {
-                if (countriesCopy[i].name.startsWith(filter)) {
+                if (countriesCopy[i].name.toUpperCase().includes(filter.toUpperCase())) {
                     list.push(countriesCopy[i])
                 }
             }
@@ -62,6 +74,7 @@ const FilterCountries = ({ countries }) => {
             />
             <br />
             {overTen ? 'Too many matches, specify another filter' : filteredCountries}
+
         </div>
     )
 }
