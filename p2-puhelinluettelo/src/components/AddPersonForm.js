@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import personService from '../services/persons'
 
 const AddPersonForm = (props) => {
-    
+
     const handleNameChange = (event) => {
         props.setName(event.target.value)
     }
@@ -20,12 +21,23 @@ const AddPersonForm = (props) => {
         props.setNumber('')
         props.persons.forEach((e) => {
             if (e.name === person.name) {
-                window.alert(`${person.name} is already added to phonebook`)
+                if(window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
+    
+                    personService
+                    .update(e.id, person)
+                    .then(response => {
+                        props.setPersons(props.persons.map(p => p.id === e.id ? response.data : p))
+                    })
+                }
                 nameExists = true;
             }
         })
         if (nameExists === false) {
-            props.setPersons(props.persons.concat(person));
+            personService
+                .create(person)
+                .then(response => {
+                    props.setPersons(props.persons.concat(response.data));
+                })
         }
     }
 
