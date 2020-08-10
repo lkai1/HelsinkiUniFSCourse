@@ -27,6 +27,9 @@ const AddPersonForm = (props) => {
                     .update(e.id, person)
                     .then(response => {
                         props.setPersons(props.persons.map(p => p.id === e.id ? response.data : p))
+                        props.setMadeChange(`${person.name} number changed`)
+                    }).catch(() => {
+                        props.setMadeChange(`Information of ${person.name} has already been removed from server`)
                     })
                 }
                 nameExists = true;
@@ -37,6 +40,7 @@ const AddPersonForm = (props) => {
                 .create(person)
                 .then(response => {
                     props.setPersons(props.persons.concat(response.data));
+                    props.setMadeChange(`Added ${response.data.name}`)
                 })
         }
     }
