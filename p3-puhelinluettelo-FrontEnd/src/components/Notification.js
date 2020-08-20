@@ -15,7 +15,7 @@ const Notification = ({ madeChange }) => {
     )
     const [message, setMessage] = useState('')
     useEffect(() => {
-        if(madeChange.startsWith("Information")) {
+        if(madeChange.startsWith("Information") || madeChange.startsWith(`"Person validation failed:`)) {
             setStyle({
                 color: 'red',
                 background: 'lightgrey',

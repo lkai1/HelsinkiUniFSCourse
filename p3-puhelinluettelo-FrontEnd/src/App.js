@@ -24,7 +24,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <Notification madeChange={madeChange} setMadeChange={setMadeChange}/>
       <FilterForm filter={personFilter} setFilter={setPersonFilter}/>
-      <AddPersonForm setMadeChange={setMadeChange} name={newName} number={newNumber} persons={persons} setPersons={setPersons} setNumber={setNewNumber} setName={setNewName} />
+      <AddPersonForm madeChange={madeChange} setMadeChange={setMadeChange} name={newName} number={newNumber} persons={persons} setPersons={setPersons} setNumber={setNewNumber} setName={setNewName} />
       <h2>Numbers</h2>
       <PrintPersons setMadeChange={setMadeChange} persons={persons} setPersons={setPersons} personFilter={personFilter} />
     </div>

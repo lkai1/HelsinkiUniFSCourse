@@ -21,16 +21,15 @@ const AddPersonForm = (props) => {
         props.setNumber('')
         props.persons.forEach((e) => {
             if (e.name === person.name) {
-                if(window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
-    
+                if (window.confirm(`${person.name} is already added to phonebook, replace the old number with a new one?`)) {
                     personService
-                    .update(e.id, person)
-                    .then(response => {
-                        props.setPersons(props.persons.map(p => p.id === e.id ? response.data : p))
-                        props.setMadeChange(`${person.name} number changed`)
-                    }).catch(() => {
-                        props.setMadeChange(`Information of ${person.name} has already been removed from server`)
-                    })
+                        .update(e.id, person)
+                        .then(response => {
+                            props.setPersons(props.persons.map(p => p.id === e.id ? response.data : p))
+                            props.setMadeChange(`${person.name} number changed`)
+                        }).catch(() => {
+                            props.setMadeChange(`Information of ${person.name} has already been removed from server`)
+                        })
                 }
                 nameExists = true;
             }
@@ -38,12 +37,16 @@ const AddPersonForm = (props) => {
         if (nameExists === false) {
             personService
                 .create(person)
-                .then(response => {
-                    props.setPersons(props.persons.concat(response.data));
-                    props.setMadeChange(`Added ${response.data.name}`)
+                .then(createdPerson => {
+                    props.setPersons(props.persons.concat(createdPerson.data));
+                    props.setMadeChange(`Added ${createdPerson.data.name}`)
+                }).catch(e => {
+                    props.setMadeChange(JSON.stringify(e.response.data.error))
+                    console.log(e.response.data.error)
                 })
         }
     }
+
 
     return (
         <div>
