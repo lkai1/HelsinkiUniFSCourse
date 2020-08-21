@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import personService from '../services/persons'
 
 const AddPersonForm = (props) => {

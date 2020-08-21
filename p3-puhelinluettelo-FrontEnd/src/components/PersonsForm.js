@@ -18,6 +18,7 @@ const PrintPersons = ({setMadeChange, persons, setPersons, personFilter}) => {
         } else if (e.name.toUpperCase().startsWith(personFilter.toUpperCase())) {
             return <p key={e.id}>{e.name} {e.number} <button onClick={() => buttonFunction(e)}>delete</button></p>
         }
+        return undefined;
     })
     )
 }
