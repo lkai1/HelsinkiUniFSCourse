@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+require('express-async-errors')
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const config = require('./utils/config')
@@ -17,10 +18,11 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
   .catch((error) => {
     logger.error('error connection to MongoDB:', error.message)
   })
+app.use(express.static('build'))
 app.use(middleware.errorHandler)
+app.use(middleware.requestLogger)
 app.use(cors())
 app.use(express.json())
-app.use(middleware.requestLogger)
 app.use('/api/blogposts', blogsRouter)
 
 module.exports = app

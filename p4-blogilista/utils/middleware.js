@@ -1,11 +1,13 @@
 const logger = require('./logger')
+
 const errorHandler = (error, request, response, next) => {
     logger.error(error.message)
+    console.log(error.message)
     if (error.name === 'ValidationError') {
-        return response.status(400).json({ error: error.message })
-    }
+      return response.status(400).json({ error: error.message })
+    } 
     next(error)
-}
+  }
 const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method)
     logger.info('Path:  ', request.path)

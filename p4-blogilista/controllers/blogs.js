@@ -7,17 +7,20 @@ blogsRouter.get('/', (request, response) => {
             response.json(blogs.map(blog => blog.toJSON()))
         })
 })
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/', async (request, response, next) => {
     const blog = new Blog(request.body)
     if (blog.likes === undefined) {
         blog.likes = 0
     }
-    blog
-        .save()
-        .then(result => {
-            response.status(201).json(result)
-        })
-        .catch(error => next(error))
+    if (blog.title === undefined || blog.url === undefined) {
+        return response.status(400).end()
+    } else {
+        blog
+            .save()
+            .then(result => {
+                return response.status(201).json(result)
+            })
+    }
 })
 
 module.exports = blogsRouter
