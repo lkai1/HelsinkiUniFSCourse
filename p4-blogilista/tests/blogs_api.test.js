@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blogpost')
-const { response } = require('express')
 const initialBlogs = [
     {
         "title": "Interesting",
@@ -51,7 +50,7 @@ test('if likes undefined it has value 0', async () => {
     const response = await api.get('/api/blogposts')
     expect(response.body[1].likes).toBe(0)
 })
-test('blogpost does not have title and url', async () => {
+test('400 if blogpost does not have title and url', async () => {
     const newBlog = {
         author: "MeMyselfAndYou",
         likes: -8
@@ -59,9 +58,7 @@ test('blogpost does not have title and url', async () => {
     await api
         .post('/api/blogposts')
         .send(newBlog)
-        const response = await api.get('/api/blogposts')
-    expect(response.body[1].title).toBe(undefined)
-    expect(response.body[1].url).toBe(undefined)
+        .expect(400)
 })
 afterAll(() => {
     mongoose.connection.close()
