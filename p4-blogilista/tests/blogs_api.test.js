@@ -1,3 +1,4 @@
+const { application } = require('express')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -24,17 +25,17 @@ test('id variable in object named "id"', async () => {
     const response = await api.get('/api/blogposts')
     expect(response.body[0].id).toBeDefined()
 })
-test('can add blogs to /api/blogs', async () => {
-    const newBlog = {
+test('can add blogs to /api/blogsposts', async () => {
+    const newBlog = new Blog({
         title: "UnInteresting",
         author: "MeMyselfAndYou",
         url: "randomUrl2",
         likes: -8
-    }
+    })
     await api
         .post('/api/blogposts')
         .send(newBlog)
-        .expect('Content-Type', /application\/json/)
+        .expect('Content-Type', /application\/JSON/)
     const response = await api.get('/api/blogposts')
     expect(response.body).toHaveLength(2)
 })

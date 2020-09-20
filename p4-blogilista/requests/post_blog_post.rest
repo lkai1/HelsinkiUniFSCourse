@@ -1,9 +1,10 @@
-POST http://localhost:3003/api/blogposts/5f4e3c6e98d51a47e4ef0772
+POST http://localhost:3003/api/blogposts/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkxEU2EiLCJpZCI6IjVmNjc0NjczYTNmYzMwM2NlNDFiODI3ZSIsImlhdCI6MTYwMDYwMzc2OH0.OYye86EWJ4gnVPVsMWuLCHzy0dMvbEGB8GZyfxRFDbc
 
 {
-    "title": "Interesting",
-    "author": "MeMyselfAndI",
-    "url": "yup.com",
-    "likes": 12
+    "title": "Whats upppity",
+    "author": "Her",
+    "url": "perhaps.com",
+    "likes": 15
 }
