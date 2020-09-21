@@ -1,66 +1,33 @@
-const { application } = require('express')
-const mongoose = require('mongoose')
 const supertest = require('supertest')
+const mongoose = require('mongoose')
+const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
-const Blog = require('../models/blogpost')
-const initialBlogs = [
-    {
-        "title": "Interesting",
-        "author": "MeMyselfAndI",
-        "url": "randomUrl",
-        "likes": 8,
-    }
-]
+
+const Blog = require('../models/blog')
+const User = require('../models/user')
+
 beforeEach(async () => {
-    await Blog.deleteMany({})
-    let blogObject = new Blog(initialBlogs[0])
-    await blogObject.save()
+  await Blog.deleteMany({})
+  await User.deleteMany({})
+
+  const blogObjects = helper.initialBlogs
+    .map(blog => new Blog(blog))
+
+  const promiseArray = blogObjects.map(blog => blog.save())
+  await Promise.all(promiseArray)
 })
-test('right amount of JSON blogs', async () => {
-    const response = await api.get('/api/blogposts')
-    expect(response.body).toHaveLength(1)
-})
-test('id variable in object named "id"', async () => {
-    const response = await api.get('/api/blogposts')
+
+describe('when some blogs are saved', () => {
+  test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs')
+
+    expect(response.body.length).toBe(helper.initialBlogs.length)
+  })
+
+  test('id field is properly named', async () => {
+    const response = await api.get('/api/blogs')
+
     expect(response.body[0].id).toBeDefined()
-})
-test('can add blogs to /api/blogsposts', async () => {
-    const newBlog = new Blog({
-        title: "UnInteresting",
-        author: "MeMyselfAndYou",
-        url: "randomUrl2",
-        likes: -8
-    })
-    await api
-        .post('/api/blogposts')
-        .send(newBlog)
-        .expect('Content-Type', /application\/JSON/)
-    const response = await api.get('/api/blogposts')
-    expect(response.body).toHaveLength(2)
-})
-test('if likes undefined it has value 0', async () => {
-    const newBlog = {
-        title: "UnInteresting",
-        author: "MeMyselfAndYou",
-        url: "randomUrl2",
-    }
-    await api
-        .post('/api/blogposts')
-        .send(newBlog)
-    const response = await api.get('/api/blogposts')
-    expect(response.body[1].likes).toBe(0)
-})
-test('400 if blogpost does not have title and url', async () => {
-    const newBlog = {
-        author: "MeMyselfAndYou",
-        likes: -8
-    }
-    await api
-        .post('/api/blogposts')
-        .send(newBlog)
-        .expect(400)
-})
-afterAll(() => {
-    mongoose.connection.close()
+  })
 })
