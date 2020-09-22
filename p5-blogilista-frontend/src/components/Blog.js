@@ -29,7 +29,7 @@ const Blog = ({ blog }) => {
     return (
       <span>
         {`likes ${likes}`}
-        <button onClick={handleLike}>like</button>
+        <button id="likeBtn" onClick={handleLike}>like</button>
       </span>
     )
   }
@@ -44,13 +44,14 @@ const Blog = ({ blog }) => {
     const userObject = JSON.parse(window.localStorage.getItem('loggedBlogappUser'))
     if (userObject !== null) {
       user = userObject.name
-
-      if (user === blog.user.name) {
-        return (
-          <span>
-            <button onClick={handleDelete}>delete</button>
-          </span>
-        )
+      if (blog.user !== null) {
+        if (user === blog.user.name) {
+          return (
+            <span>
+              <button id="deleteBtn" onClick={handleDelete}>delete</button>
+            </span>
+          )
+        }
       }
     }
     return (
@@ -60,12 +61,12 @@ const Blog = ({ blog }) => {
   const handleShown = () => {
     if (shown) {
       setViewhideText('view')
-      setShowBlog(`${blog.title} ${blog.author}`)
+      setShowBlog(<span id="notShownBlog">{`${blog.title} ${blog.author}`}</span>)
       setShown(false)
     } else {
       setViewhideText('hide')
       setShowBlog(
-        <span id="showedBlog">
+        <span id="shownBlog">
           {`${blog.title} ${blog.author}`}
           <br />
           {blog.url}
@@ -86,7 +87,7 @@ const Blog = ({ blog }) => {
     <div style={blogStyle}>
       {showBlog}
       <br />
-      <button onClick={handleShown}>{viewhideText}</button>
+      <button id="showBlog" onClick={handleShown}>{viewhideText}</button>
     </div>
   )
 }

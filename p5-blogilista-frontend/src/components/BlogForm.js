@@ -40,35 +40,37 @@ const BlogForm = (props) => {
       <br />
       <Togglable buttonLabel='create'>
         <form onSubmit={addBlog}>
-            title:
+          title:
           <input
-            name="title"
+            id="title"
             value={props.title}
             onChange={props.handleTitleChange}
           />
           <br />
           author:
           <input
-            name="author"
+            id="author"
             value={props.author}
             onChange={props.handleAuthorChange}
           />
           <br />
           url:
           <input
-            name="url"
+            id="url"
             value={props.url}
             onChange={props.handleUrlChange}
           />
           <br />
-          <button type="submit">create</button>
+          <button id="create" type="submit">create</button>
         </form>
       </Togglable>
-      {props.blogs.sort(function (a,b) {
-        return b.likes - a.likes
-      }).map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+      <span id="blogs">
+        {props.blogs.sort(function (a, b) {
+          return b.likes - a.likes
+        }).map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </span>
     </div>
   )
 }

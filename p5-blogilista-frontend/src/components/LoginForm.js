@@ -2,27 +2,27 @@ import React from 'react'
 
 const LoginForm = (props) => {
   return (
-    <form onSubmit={props.handleSubmit}>
+    <form id="loginForm" onSubmit={props.handleSubmit}>
       <h2>login to application</h2>
       <p>{props.notification}</p>
       <div>
-                username
+        username
         <input
           value={props.username}
-          name="Username"
+          id="username"
           onChange={props.handleUsernameChange}
         />
       </div>
       <div>
-                password
+        password
         <input
           type="password"
           value={props.password}
-          name="Password"
+          id="password"
           onChange={props.handlePasswordChange}
         />
       </div>
-      <button type="submit">login</button>
+      <button id="loginBtn" type="submit">login</button>
     </form>
   )
 }
