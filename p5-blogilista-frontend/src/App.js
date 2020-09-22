@@ -9,9 +9,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
   const [notification, setNotification] = useState(null)
 
   const handleLogin = async (event) => {
@@ -25,20 +25,20 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user.name)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
     } catch (exception) {
-      setNotification("wrong credentials")
+      setNotification('wrong credentials')
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     }
     console.log('logging in with', username, password)
   }
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    setNotification("logged out")
+    setNotification('logged out')
     setTimeout(() => {
       setNotification(null)
     }, 5000)

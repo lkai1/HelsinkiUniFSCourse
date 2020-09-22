@@ -1,6 +1,6 @@
-POST http://localhost:3003/api/blogposts/
+POST http://localhost:3001/api/blogposts/
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkxEU2EiLCJpZCI6IjVmNjc0NjczYTNmYzMwM2NlNDFiODI3ZSIsImlhdCI6MTYwMDYwMzc2OH0.OYye86EWJ4gnVPVsMWuLCHzy0dMvbEGB8GZyfxRFDbc
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkxEU2EiLCJpZCI6IjVmNjlkZGVlZGQ1NDljMmE1YzQwZDUyZCIsImlhdCI6MTYwMDc3MzY2M30.Ky7HBgHojfmBEDTTSv_kPgcIhQUUQoJLX3URiFShbVQ
 
 {
     "title": "Whats upppity",
