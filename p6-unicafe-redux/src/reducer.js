@@ -1,26 +1,24 @@
-import { createStore } from 'redux'
+
 
 const initialState = {
-  good: 5,
-  ok: 4,
-  bad: 2
+  good: 0,
+  ok: 0,
+  bad: 0
 }
 
 const counterReducer = (state = initialState, action) => {
   console.log(action)
   switch (action.type) {
     case 'GOOD':
-      return state
+      return state = { good: state.good + 1, ok: state.ok, bad: state.bad }
     case 'OK':
-      return state
+      return state = { good: state.good, ok: state.ok + 1, bad: state.bad }
     case 'BAD':
-      return state
+      return state = { good: state.good, ok: state.ok, bad: state.bad + 1 }
     case 'ZERO':
-      return state
+      return state = { good: 0, ok: 0, bad: 0 }
     default: return state
   }
   
 }
-const store = createStore(counterReducer)
-store.dispatch({type})
 export default counterReducer
