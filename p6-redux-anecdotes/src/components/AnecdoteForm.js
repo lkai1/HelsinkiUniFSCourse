@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import anecdoteService from '../services/anecdotes'
@@ -24,4 +24,5 @@ const AnecdoteForm = () => {
         </div>
     )
 }
-export default AnecdoteForm
+const ConnectedAnecdoteForm = connect()(AnecdoteForm)
+export default ConnectedAnecdoteForm

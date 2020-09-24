@@ -1,5 +1,5 @@
-import React, { Children } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react'
+import { useSelector, useDispatch, connect } from 'react-redux'
 import { createVote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -10,6 +10,7 @@ const AnecdoteList = () => {
         dispatch(createVote(id))
         dispatch(setNotification(`Voted for '${document.getElementById(id).childNodes[0].innerHTML}'`, 3))
     }
+
     return (
         <div>
             {anecdotes.map(anecdote =>
@@ -28,4 +29,5 @@ const AnecdoteList = () => {
         </div>
     )
 }
-export default AnecdoteList
+const ConnectedAnecdotes = connect()(AnecdoteList)
+export default ConnectedAnecdotes
