@@ -1,17 +1,14 @@
 import React, { Children } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createVote } from '../reducers/anecdoteReducer'
-import { notify } from '../reducers/notificationReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
     const anecdotes = useSelector(state => state.anecdote)
     const dispatch = useDispatch()
     const vote = (id) => {
         dispatch(createVote(id))
-        dispatch(notify(`Voted for '${document.getElementById(id).childNodes[0].innerHTML}'`))
-        setTimeout(() => {
-            dispatch(notify(""))
-        }, [2000])
+        dispatch(setNotification(`Voted for '${document.getElementById(id).childNodes[0].innerHTML}'`, 3))
     }
     return (
         <div>
