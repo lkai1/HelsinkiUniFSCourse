@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Switch, Route, Link, useParams, Redirect
 } from "react-router-dom"
+import { useField } from './hooks'
 
 const Menu = () => {
   const padding = {
@@ -63,39 +64,49 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('content')
+  const author = useField('author')
+  const info = useField('info')
+  const noResetField = ({ ...parafield }) => {
+    const { reset, ...field } = parafield
+    return field
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault()
 
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
-
+  }
+  const handleReset = (event) => {
+    event.preventDefault()
+    content.reset()
+    author.reset(
+    info.reset()
+    )
   }
 
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...{ ...noResetField(content) }} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...{ ...noResetField(author) }} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...{ ...noResetField(info) }} />
         </div>
-        <button type="submit">create</button>
+        <button type="submit" onClick={handleSubmit}>create</button>
+        <button type="text" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
@@ -125,7 +136,7 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
-    
+
     setNotification(`a new anecdote ${anecdote.content} created!`)
     setTimeout(() => {
       setNotification("")
@@ -156,7 +167,7 @@ const App = () => {
             <Anecdote anecdotes={anecdotes} />
           </Route>
           <Route path="/create">
-            {notification === "" ? <CreateNew addNew={addNew} /> : <Redirect to="/"/>}
+            {notification === "" ? <CreateNew addNew={addNew} /> : <Redirect to="/" />}
           </Route>
           <Route path="/about">
             <About />
