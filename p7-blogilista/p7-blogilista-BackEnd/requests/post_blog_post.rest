@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogposts/
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkxEU2EiLCJpZCI6IjVmNjlkZGVlZGQ1NDljMmE1YzQwZDUyZCIsImlhdCI6MTYwMDc3MzY2M30.Ky7HBgHojfmBEDTTSv_kPgcIhQUUQoJLX3URiFShbVQ
+
+{
+    "title": "Whats upppity",
+    "author": "Her",
+    "url": "perhaps.com",
+    "likes": 15
+}

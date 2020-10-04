@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogposts/5f4e3c6e98d51a47e4ef0772
+Content-Type: application/json
+
+{
+    "title": "Interesting",
+    "author": "MeMyselfAndYou",
+    "url": "yup.com",
+    "likes": 8
+}
