@@ -7,34 +7,39 @@ import { Table, Form, Button } from 'react-bootstrap'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import storage from './utils/storage'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { notify } from './reducers/notificationReducer'
+import { addBlog, likeBlog, removeBlog } from './reducers/blogReducer'
+import { savedUser } from './reducers/userReducer'
+import { Route, Link } from 'react-router-dom'
+import Navigation from './components/Navigation'
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  const blogs = useSelector(state => state.blog)
+  console.log(blogs)
+  const user = useSelector(state => state.user)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notification, setNotification] = useState(null)
-
   const blogFormRef = React.createRef()
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll()
+      .then(blogs =>
+        dispatch(addBlog(blogs))
+      )
   }, [])
 
   useEffect(() => {
     const user = storage.loadUser()
-    setUser(user)
+    dispatch(savedUser(user))
   }, [])
 
-  const notifyWith = (message, type = 'success') => {
-    setNotification({
-      message, type
-    })
+  const notifyWith = (message) => {
+    console.log(message)
+    dispatch(notify(message))
     setTimeout(() => {
-      setNotification(null)
-    }, 5000)
+      dispatch(notify(""))
+    }, [2000])
   }
 
   const handleLogin = async (event) => {
@@ -46,7 +51,7 @@ const App = () => {
 
       setUsername('')
       setPassword('')
-      setUser(user)
+      dispatch(savedUser(user))
       notifyWith(`${user.name} welcome back!`)
       storage.saveUser(user)
     } catch (exception) {
@@ -58,7 +63,7 @@ const App = () => {
     try {
       const newBlog = await blogService.create(blog)
       blogFormRef.current.toggleVisibility()
-      setBlogs(blogs.concat(newBlog))
+      dispatch(addBlog(newBlog))
       notifyWith(`a new blog '${newBlog.title}' by ${newBlog.author} added!`)
     } catch (exception) {
       console.log(exception)
@@ -69,7 +74,7 @@ const App = () => {
     const blogToLike = blogs.find(b => b.id === id)
     const likedBlog = { ...blogToLike, likes: blogToLike.likes + 1, user: blogToLike.user.id }
     await blogService.update(likedBlog)
-    setBlogs(blogs.map(b => b.id === id ? { ...blogToLike, likes: blogToLike.likes + 1 } : b))
+    dispatch(likeBlog(blogs.map(b => b.id === id ? { ...blogToLike, likes: blogToLike.likes + 1 } : b)))
   }
 
   const handleRemove = async (id) => {
@@ -77,12 +82,13 @@ const App = () => {
     const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
     if (ok) {
       await blogService.remove(id)
-      setBlogs(blogs.filter(b => b.id !== id))
+      dispatch(removeBlog(blogs, blogToRemove))
+      notifyWith(`removed ${blogToRemove.title} by ${blogToRemove.author}`)
     }
   }
 
   const handleLogout = () => {
-    setUser(null)
+    dispatch(savedUser(null))
     storage.logoutUser()
   }
 
@@ -90,24 +96,24 @@ const App = () => {
     return (
       <div>
         <h2>login to application</h2>
-            <Notification notification={notification} />
-            <Form onSubmit={handleLogin}>
-              <Form.Group>
-                <Form.Label>username:</Form.Label>
-                <Form.Control
-                  id='username'
-                  value={username}
-                  onChange={({ target }) => setUsername(target.value)}
-                />
-                <Form.Label>password:</Form.Label>
-                <Form.Control
-                  id='password'
-                  value={password}
-                  onChange={({ target }) => setPassword(target.value)}
-                />
-                <Button variant="primary" type="submit" id='login'>login</Button>
-              </Form.Group>
-            </Form>
+        <Notification />
+        <Form onSubmit={handleLogin}>
+          <Form.Group>
+            <Form.Label>username:</Form.Label>
+            <Form.Control
+              id='username'
+              value={username}
+              onChange={({ target }) => setUsername(target.value)}
+            />
+            <Form.Label>password:</Form.Label>
+            <Form.Control
+              id='password'
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+            />
+            <Button variant="primary" type="submit" id='login'>login</Button>
+          </Form.Group>
+        </Form>
       </div>
     )
   }
@@ -116,31 +122,28 @@ const App = () => {
 
   return (
     <div className="container">
-            <h2>blogs</h2>
+      <Navigation/>
+      <h2>blogs</h2>
 
-            <Notification notification={notification} />
+      <Notification />
 
-            <p>
-              {user.name} logged in <button onClick={handleLogout}>logout</button>
-            </p>
+      <p>
+        {user.name} logged in <button onClick={handleLogout}>logout</button>
+      </p>
 
-            <Togglable buttonLabel='create new blog' ref={blogFormRef}>
-              <NewBlog createBlog={createBlog} />
-            </Togglable>
-            <Table striped>
-              <tbody>
-                {blogs.sort(byLikes).map(blog =>
-                  <Blog
-                    key={blog.id}
-                    blog={blog}
-                    handleLike={handleLike}
-                    handleRemove={handleRemove}
-                    own={user.username === blog.user.username}
-                  />
-                )}
-              </tbody>
-            </Table>
-          </div>
+      <Togglable buttonLabel='create new blog' ref={blogFormRef}>
+        <NewBlog createBlog={createBlog} />
+      </Togglable>
+      {blogs.sort(byLikes).map(blog =>
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleLike={handleLike}
+          handleRemove={handleRemove}
+          own={user.username === blog.user.username}
+        />
+      )}
+    </div>
   )
 }
 
