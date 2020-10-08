@@ -9,7 +9,7 @@ import loginService from './services/login'
 import storage from './utils/storage'
 import { useDispatch, useSelector } from 'react-redux'
 import { notify } from './reducers/notificationReducer'
-import { addBlog, likeBlog, removeBlog } from './reducers/blogReducer'
+import { addBlog, initialBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { savedUser } from './reducers/userReducer'
 import { Route, Link } from 'react-router-dom'
 import Navigation from './components/Navigation'
@@ -25,7 +25,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll()
       .then(blogs =>
-        dispatch(addBlog(blogs))
+        dispatch(initialBlogs(blogs))
       )
   }, [])
 
@@ -122,7 +122,7 @@ const App = () => {
 
   return (
     <div className="container">
-      <Navigation/>
+      <Navigation />
       <h2>blogs</h2>
 
       <Notification />

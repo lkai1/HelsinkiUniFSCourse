@@ -2,13 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import blogService from '../services/blogs'
 import Navigation from './Navigation'
+import { initialBlogs } from '../reducers/blogReducer'
 const BlogDetails = ({ title, author, url, likes, id, user }) => {
-    const urlId = window.location.pathname
-    if(urlId.substring(9) !== id) {
-        return (
-            null
-        )
-    }
     return (
         <div>
             <h5>{title} by {author}</h5>
@@ -21,22 +16,27 @@ const BlogDetails = ({ title, author, url, likes, id, user }) => {
     )
 }
 const UsersById = () => {
-    const [blogs, setBlogs] = useState([])
+    const dispatch = useDispatch()
+    const urlId = window.location.pathname
     useEffect(() => {
-        blogService.getAll().then(response =>
-            setBlogs(blogs.concat(response))
-        )
-    }, [])
+        blogService.getAll()
+          .then(blogs =>
+            dispatch(initialBlogs(blogs))
+          )
+      }, [])
+    const blogs = useSelector(state => state.blog)
+    console.log(blogs)
+    const blogsByid = blogs.filter(blog => blog.id === urlId.substring(9))
     if(blogs === []) {
         return (
-            null
+            <div></div>
         )
     }
     console.log(blogs)
     return (
         <div>
             <Navigation/>
-            {blogs.map(blog => <BlogDetails 
+            {blogsByid.map(blog => <BlogDetails 
                 title={blog.title}
                 author={blog.author}
                 url={blog.url}

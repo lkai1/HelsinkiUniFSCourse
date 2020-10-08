@@ -1,7 +1,10 @@
 
 
+
 const blogReducer = (state = [], action) => {
     switch (action.type) {
+        case 'INITIALBLOGS':
+            return state = action.data
         case 'NEWBLOG':
             return state = state.concat(action.data)
         case 'LIKEBLOG':
@@ -9,6 +12,12 @@ const blogReducer = (state = [], action) => {
         case 'REMOVEBLOG':
             return state = action.data
         default: return state
+    }
+}
+export const initialBlogs = (blogs) => {
+    return {
+        type: 'INITIALBLOGS',
+        data: blogs
     }
 }
 export const addBlog = (blog) => {
