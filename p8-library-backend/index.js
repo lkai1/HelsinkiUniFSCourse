@@ -1,5 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server')
-
+const { v4: uuidv4 } = require('uuid');
 let authors = [
   {
     name: 'Robert Martin',
@@ -98,11 +98,22 @@ const typeDefs = gql`
     id: ID!
     genres: [String!]!
   }
-
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+      ): Author
+  }
   type Query {
     authorCount: Int!
     bookCount: Int!
-    allBooks: [Book!]!
+    allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
 `
@@ -111,13 +122,68 @@ const resolvers = {
   Query: {
     authorCount: () => authors.length,
     bookCount: () => books.length,
-    allBooks: () => books,
+    allBooks: (root, args) => {
+      if (args.author === undefined && args.genre === undefined) {
+        return books
+      } else if (args.author !== undefined && args.genre === undefined) {
+        return books.filter(b => b.author === args.author).map(b => {
+          return {
+            title: b.title
+          }
+        })
+      } else if (args.author === undefined && args.genre !== undefined) {
+        const booksByGenre = []
+        books.forEach((b) => {
+          if (b.genres.includes(args.genre)) {
+            booksByGenre.push({
+              title: b.title,
+              author: b.author
+            })
+          }
+        })
+        return booksByGenre
+      } else if (args.author !== undefined && args.genre !== undefined) {
+        const booksByGenre = []
+        books.filter(b => b.author === args.author).forEach((b) => {
+          if (b.genres.includes(args.genre)) {
+            booksByGenre.push({
+              title: b.title,
+              author: b.author
+            })
+          }
+        })
+        return booksByGenre
+      }
+    },
     allAuthors: () => authors,
   },
   Author: {
     bookCount: (root) => {
       const booksamount = books.filter(b => b.author === root.name).length
       return booksamount
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuidv4() }
+      books = books.concat(book)
+      const authorExists = authors.filter(a => a.name === book.author)
+      if (authorExists.length === 0) {
+        authors = authors.concat({
+          name: book.author,
+        })
+      }
+      return book
+    },
+    editAuthor: (root, args) => {
+      console.log(args)
+      const authorToEdit = authors.find(a => a.name === args.name)
+      console.log(authorToEdit)
+      if(authorToEdit === undefined) {
+        return null
+      }
+      authorToEdit.born = args.setBornTo
+      return authorToEdit
     }
   }
 }
