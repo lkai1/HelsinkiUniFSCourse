@@ -90,7 +90,6 @@ const typeDefs = gql`
     born: Int
     bookCount: Int
   }
-
   type Book {
     title: String!
     published: Int!
@@ -171,12 +170,12 @@ const resolvers = {
       if (authorExists.length === 0) {
         authors = authors.concat({
           name: book.author,
+          id: uuidv4()
         })
       }
       return book
     },
     editAuthor: (root, args) => {
-      console.log(args)
       const authorToEdit = authors.find(a => a.name === args.name)
       console.log(authorToEdit)
       if(authorToEdit === undefined) {
