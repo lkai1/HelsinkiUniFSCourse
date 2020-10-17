@@ -39,6 +39,14 @@ type Token {
       genres: [String!]!
     }
     type Mutation {
+      createUser(
+        username: String!
+        favoriteGenre: String!
+      ): User
+      login(
+        username: String!
+        password: String!
+      ): Token
       addBook(
         title: String!
         author: String!
@@ -51,6 +59,7 @@ type Token {
         ): Author
     }
     type Query {
+      me: User
       authorCount: Int!
       bookCount: Int!
       allBooks(author: String, genre: String): [Book!]!
@@ -60,6 +69,9 @@ type Token {
 
 const resolvers = {
   Query: {
+    me: (root, args, context) => {
+      return context.currentUser
+    },
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
@@ -125,7 +137,36 @@ const resolvers = {
     }
   },
   Mutation: {
+    createUser: (root, args) => {
+      const user = new User({ username: args.username })
+
+      return user.save()
+        .catch(error => {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        })
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if (!user || args.password !== 'secret') {
+        throw new UserInputError("wrong credentials")
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id,
+      }
+
+      return { value: jwt.sign(userForToken, JWT_SECRET) }
+    },
     addBook: async (root, args) => {
+      const currentUser = context.currentUser
+
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
       const matchingAuthor = await Author.findOne({ name: args.author })
 
       if (matchingAuthor) {
@@ -177,6 +218,11 @@ const resolvers = {
       }
     },
     editAuthor: async (root, args) => {
+      const currentUser = context.currentUser
+
+      if (!currentUser) {
+        throw new AuthenticationError("not authenticated")
+      }
       const updatedAuthor = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo })
 
       try {
@@ -195,6 +241,17 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.toLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(
+        auth.substring(7), JWT_SECRET
+      )
+      const currentUser = await User
+        .findById(decodedToken.id).populate('friends')
+      return { currentUser }
+    }
+  }
 })
 
 server.listen().then(({ url }) => {
