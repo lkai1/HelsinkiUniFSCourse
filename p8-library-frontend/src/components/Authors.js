@@ -2,11 +2,10 @@
 import React, { useState } from 'react'
 import { gql, useQuery, useMutation } from '@apollo/client'
 
-const ALL_AUTHORS = gql`
+const ALL_AUTHORS= gql`
 query {
-  allAuthors {
+  allAuthors  {
     name
-    id
     born
     bookCount
   }
@@ -19,7 +18,6 @@ const EDIT_BORN = gql`
       setBornTo: $born
     ) {
       name
-      id
       born
       bookCount
     }
@@ -37,6 +35,9 @@ const Authors = (props) => {
     changeBorn({ variables: { name, born } })
     setName('')
     setBorn('')
+  }
+  if(authors.data === undefined) {
+    return <div>No Data</div>
   }
   if (authors.loading) {
     return <div>loading...</div>
