@@ -1,42 +1,28 @@
 
 import React, { useState } from 'react'
-import { gql, useQuery, useMutation } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
+import { ALL_AUTHORS, EDIT_BORN } from '../queries'
 
-const ALL_AUTHORS= gql`
-query {
-  allAuthors  {
-    name
-    born
-    bookCount
-  }
-}
-`
-const EDIT_BORN = gql`
-  mutation changeBorn($name: String!, $born: Int!) {
-    editAuthor (
-      name: $name,
-      setBornTo: $born
-    ) {
-      name
-      born
-      bookCount
-    }
-  }
-`
 const Authors = (props) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
+  const [error, setError] = useState('')
   const authors = useQuery(ALL_AUTHORS, {
     pollInterval: 2000
   })
-  const [changeBorn] = useMutation(EDIT_BORN)
+  const [changeBorn] = useMutation(EDIT_BORN, {
+    refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message)
+    }
+  })
   const submit = (event) => {
     event.preventDefault()
     changeBorn({ variables: { name, born } })
     setName('')
     setBorn('')
   }
-  if(authors.data === undefined) {
+  if (authors.data === undefined) {
     return <div>No Data</div>
   }
   if (authors.loading) {
@@ -47,6 +33,7 @@ const Authors = (props) => {
   }
   return (
     <div>
+      {error}
       <h2>authors</h2>
       <table>
         <tbody>
@@ -72,10 +59,10 @@ const Authors = (props) => {
       <form onSubmit={submit}>
         <div>
           name
-          <select value={name} onChange={({target}) => setName(target.value)}>
+          <select value={name} onChange={({ target }) => setName(target.value)}>
             {authors.data.allAuthors.map(a =>
-                <option key={a.name}>{a.name}</option>  
-              )}
+              <option key={a.name}>{a.name}</option>
+            )}
           </select>
         </div>
         <div>
