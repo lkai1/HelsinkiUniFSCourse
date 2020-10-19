@@ -7,6 +7,7 @@ const Authors = (props) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
   const [error, setError] = useState('')
+
   const authors = useQuery(ALL_AUTHORS, {
     pollInterval: 2000
   })
@@ -30,6 +31,35 @@ const Authors = (props) => {
   }
   if (!props.show) {
     return null
+  }
+  if (name === '') {
+    setName(authors.data.allAuthors[0].name)
+  }
+  const SetBDay = () => {
+
+    return (
+      <div>
+        <h2>Set birthyear</h2>
+        <form onSubmit={submit}>
+          <div>
+            name
+          <select value={name} onChange={({ target }) => setName(target.value)}>
+              {authors.data.allAuthors.map(a =>
+                <option key={a.name}>{a.name}</option>
+              )}
+            </select>
+          </div>
+          <div>
+            born
+          <input
+              value={born}
+              onChange={({ target }) => setBorn(Number(target.value))}
+            />
+          </div>
+          <button type='submit'>update author</button>
+        </form>
+      </div>
+    )
   }
   return (
     <div>
@@ -55,25 +85,7 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-      <h2>Set birthyear</h2>
-      <form onSubmit={submit}>
-        <div>
-          name
-          <select value={name} onChange={({ target }) => setName(target.value)}>
-            {authors.data.allAuthors.map(a =>
-              <option key={a.name}>{a.name}</option>
-            )}
-          </select>
-        </div>
-        <div>
-          born
-          <input
-            value={born}
-            onChange={({ target }) => setBorn(Number(target.value))}
-          />
-        </div>
-        <button type='submit'>update author</button>
-      </form>
+      {!props.loggedin ? <span></span> : <SetBDay />}
     </div>
   )
 }

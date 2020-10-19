@@ -23,6 +23,8 @@ const LoginForm = ({ show, setToken, setError, setLoggedIn }) => {
     }
     const submit = async (event) => {
         event.preventDefault()
+        setUsername('')
+        setPassword('')
         login({ variables: { username, password } })
     }
     return (

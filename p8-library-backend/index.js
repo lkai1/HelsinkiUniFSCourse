@@ -149,7 +149,6 @@ const resolvers = {
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
-
       if (!user || args.password !== 'sala') {
         throw new UserInputError("wrong credentials")
       }
@@ -158,7 +157,6 @@ const resolvers = {
         username: user.username,
         id: user._id,
       }
-
       return { value: jwt.sign(userForToken, JWT_SECRET) }
     },
     addBook: async (root, args, context) => {
@@ -223,7 +221,6 @@ const resolvers = {
         throw new AuthenticationError("not authenticated")
       }
       const updatedAuthor = await Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo })
-
       try {
         if (updatedAuthor) {
           return updatedAuthor
@@ -246,11 +243,12 @@ const server = new ApolloServer({
       const decodedToken = jwt.verify(
         auth.substring(7), JWT_SECRET
       )
+
       /* const currentUser = await User
         .findById(decodedToken.id) */
       return { currentUser }
     }
-    
+
     const currentUser = await User.findOne({ username: "Myself" })
     return { currentUser }
   }

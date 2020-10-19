@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
@@ -34,7 +34,6 @@ const Books = (props) => {
     })
     return (
       <div>
-        hi from here
         <h2>books</h2>
         <table>
           <tbody>
@@ -83,8 +82,8 @@ const Books = (props) => {
         </tbody>
       </table>
       <h4>genres</h4>
-      {allGenres.map(g =>
-        <span key={g}>
+      {allGenres.map((g, index) =>
+        <span key={index}>
           <button onClick={() => setGenre(g)}>{g}</button>
         </span>
       )}
