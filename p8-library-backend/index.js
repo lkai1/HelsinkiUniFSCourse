@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
 const User = require('./models/User')
+const { PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 require('dotenv').config()
 const MONGODB_URI = process.env.MONGODB_URI
 const jwt = require('jsonwebtoken')
@@ -17,15 +19,17 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
   })
 
 const typeDefs = gql`
-type User {
-  username: String!
-  favoriteGenre: String!
-  id: ID!
-}
-
-type Token {
-  value: String!
-}
+    type User {
+      username: String!
+      favoriteGenre: String!
+      id: ID!
+    }
+    type Subscription {
+      bookAdded: Book!
+    }
+    type Token {
+      value: String!
+    }
     type Author {
       name: String!
       id: ID!
@@ -136,6 +140,11 @@ const resolvers = {
       return allBooks.length
     }
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    }
+  },
   Mutation: {
     createUser: (root, args) => {
       const user = new User({ username: args.username })
@@ -183,6 +192,7 @@ const resolvers = {
             invalidArgs: args,
           })
         }
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
         return book
       } else {
         const newAuthor = new Author({
@@ -212,6 +222,7 @@ const resolvers = {
             invalidArgs: args,
           })
         }
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
         return book
       }
     },
@@ -254,6 +265,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
