@@ -14,6 +14,6 @@ const calculateBmi = (height: number, weight: number) => {
     } else if (Bmi > 30) {
         return "Obese"
     }
+    return "Unknown"
 }
-
-console.log(calculateBmi(Number(process.argv[2]), Number(process.argv[3])))
+export default calculateBmi

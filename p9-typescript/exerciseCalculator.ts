@@ -15,7 +15,6 @@ const calculateExercises = (a: Array<string>): result => {
     const exercisesArray = a.map((e) => {
         return Number(e)
     })
-    console.log(exercisesArray)
     const trainingDays = exercisesArray.filter(d => d !== 0)
     const average = () => {
         let sum = 0
