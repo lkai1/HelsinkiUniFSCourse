@@ -1,7 +1,7 @@
 const calculateBmi = (height: number, weight: number) => {
     height = height / 100
     const Bmi = weight / (height * height)
-    if(Bmi < 15) {
+    if (Bmi < 15) {
         return "Very severely underweight"
     } else if (Bmi < 16) {
         return "Severely underweight"
@@ -14,6 +14,6 @@ const calculateBmi = (height: number, weight: number) => {
     } else if (Bmi > 30) {
         return "Obese"
     }
-  }
-  
-  console.log(calculateBmi(180, 74))
+}
+
+console.log(calculateBmi(Number(process.argv[2]), Number(process.argv[3])))
