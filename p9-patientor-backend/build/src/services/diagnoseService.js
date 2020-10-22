@@ -1,0 +1,17 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const diagnoses_1 = __importDefault(require("../../data/diagnoses"));
+const getEntries = () => {
+    return diagnoses_1.default;
+};
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const addEntry = () => {
+    return null;
+};
+exports.default = {
+    getEntries,
+    addEntry
+};
