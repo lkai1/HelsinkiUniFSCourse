@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const patients_1 = __importDefault(require("../../data/patients"));
+const uuid_1 = require("uuid");
 const getNonSensitiveEntries = () => {
     return patients_1.default.map(({ id, name, dateOfBirth, gender, occupation }) => ({
         id,
@@ -14,8 +15,11 @@ const getNonSensitiveEntries = () => {
     }));
 };
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const addEntry = () => {
-    return null;
+const addEntry = (entry) => {
+    const id = uuid_1.v4();
+    const newPatientEntry = Object.assign({ id: id }, entry);
+    patients_1.default.push(newPatientEntry);
+    return newPatientEntry;
 };
 exports.default = {
     getNonSensitiveEntries,
