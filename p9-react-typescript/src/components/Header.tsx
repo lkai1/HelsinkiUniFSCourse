@@ -1,4 +1,8 @@
+import React from 'react'
+const Header = (props: any) => {
 
-const Header = (props) => {
-
+    return (
+        <p>{props.courseName}</p>
+    )
 }
+export default Header

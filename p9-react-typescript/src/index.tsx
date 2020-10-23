@@ -24,19 +24,8 @@ const App: React.FC = () => {
   return (
     <div>
       <Header courseName={courseName} />
-      <p>
-        {courseParts[0].name} {courseParts[0].exerciseCount}
-      </p>
-      <p>
-        {courseParts[1].name} {courseParts[1].exerciseCount}
-      </p>
-      <p>
-        {courseParts[2].name} {courseParts[2].exerciseCount}
-      </p>
-      <p>
-        Number of exercises{" "}
-        {courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)}
-      </p>
+      <Content courseParts={courseParts} />
+      <Total total={courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)} />
     </div>
   );
 };
