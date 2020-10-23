@@ -1,10 +1,12 @@
 import React from 'react'
-const Content = (props: any) => {
+
+interface ContentProps {
+    courseParts: Array<string>;
+}
+const Content: React.FC<ContentProps> = props => {
     return (
         <span>
-            {props.courseParts.map((cp: any) => {
-                return <p key={cp.name}>{cp.name} {cp.exerciseCount}</p>
-            })}
+            {props.courseParts.map(cp => <p key={cp}>{cp}</p>)}
         </span>
     )
 }

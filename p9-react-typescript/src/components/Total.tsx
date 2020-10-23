@@ -1,6 +1,9 @@
 import React from 'react'
 
-const Total = (props: any) => {
+interface TotalProps {
+    total: number;
+}
+const Total: React.FC<TotalProps> = props => {
 
     return (
         <p>Number of exercises{" "} {props.total}</p>

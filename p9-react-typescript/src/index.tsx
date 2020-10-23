@@ -24,7 +24,9 @@ const App: React.FC = () => {
   return (
     <div>
       <Header courseName={courseName} />
-      <Content courseParts={courseParts} />
+      <Content courseParts={courseParts.map((cp) => {
+        return `${cp.name} ${cp.exerciseCount}`
+      })} />
       <Total total={courseParts.reduce((carry, part) => carry + part.exerciseCount, 0)} />
     </div>
   );

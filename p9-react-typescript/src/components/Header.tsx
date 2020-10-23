@@ -1,5 +1,9 @@
 import React from 'react'
-const Header = (props: any) => {
+
+interface HeaderProps {
+    courseName: string;
+}
+const Header: React.FC<HeaderProps> = props => {
 
     return (
         <p>{props.courseName}</p>
